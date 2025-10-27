@@ -19,6 +19,27 @@ Upload a PDF, ask questions about it, and get answers based on the actual conten
 - Python 3.10+
 - Google API Key ([Get one here](https://makersuite.google.com/app/apikey))
 
+## App Preview:
+
+<table width="100%"> 
+<tr>
+<td width="50%">      
+&nbsp; 
+<br>
+<p align="center">
+  Main Feed
+</p>
+<img src="https://github.com/DavidDanso/document-qa/blob/main/ui/main-feed.png" />
+</td> 
+<td width="50%">
+<br>
+<p align="center">
+  Q&A Interface
+</p>
+<img src="https://github.com/DavidDanso/document-qa/blob/main/ui/q%26a.png" />
+</td>
+</table>
+
 ## Setup
 
 1. **Clone the repo**
