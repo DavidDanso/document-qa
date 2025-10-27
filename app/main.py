@@ -5,6 +5,13 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # Set up vector database with embeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
+# load Gemini via ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+# build prompt template with placeholders for context and question
+from langchain_core.prompts import ChatPromptTemplate
+# create chain that stuffs docs into prompt and sends to LLM
+from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+
 from dotenv import load_dotenv
 import os
 
@@ -36,5 +43,20 @@ query="Whose cover letter is this?"
 # search db for chunks most similar to query
 result=db.similarity_search(query)
 
-# show the most relevant chunk found
-print(result[0].page_content)
+# gemini-2.5-flash model
+llm=ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+
+
+# {context} gets replaced with retrieved docs
+# {input} gets replaced with user's question
+prompt = ChatPromptTemplate.from_template("""
+Answer the following question based only on the provided context. 
+Think step by step before providing a detailed answer. 
+I will tip you $1000 if the user finds the answer helpful. 
+<context>
+{context}
+</context>
+Question: {input}""")
+
+# chain takes retrieved docs + prompt, formats them, sends to llm
+document_chain=create_stuff_documents_chain(llm,prompt)
