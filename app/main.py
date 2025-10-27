@@ -11,6 +11,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 # create chain that stuffs docs into prompt and sends to LLM
 from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+# wire up the full RAG pipeline
+from langchain_classic.chains.retrieval import create_retrieval_chain
 
 from dotenv import load_dotenv
 import os
@@ -60,3 +62,13 @@ Question: {input}""")
 
 # chain takes retrieved docs + prompt, formats them, sends to llm
 document_chain=create_stuff_documents_chain(llm,prompt)
+
+# convert vector db into retriever interface
+# retriever = wrapper that searches and returns relevant docs
+retriever=db.as_retriever()
+
+# flow: question -> retriever finds docs -> document_chain formats + sends to LLM -> answer
+retrieval_chain=create_retrieval_chain(retriever,document_chain)
+
+# run the full pipeline with a question
+response=retrieval_chain.invoke({"input":"what is she applying for?"})["answer"]
