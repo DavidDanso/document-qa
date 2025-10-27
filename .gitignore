@@ -15,6 +15,7 @@ ENV/
 .venv
 
 app/*.pdf
+demo.py
 
 # Distribution / packaging
 build/
